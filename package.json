@@ -15,5 +15,9 @@
     "parachain"
   ],
   "author": "Noah Anabiik Schwarz",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "simple-get": "4.0.0",
+    "unzipper": "0.10.11"
+  }
 }
