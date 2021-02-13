@@ -1,0 +1,79 @@
+name: prebuild&publish
+
+on:
+  push:
+    tags: # should read v0.5.1-rc ie <moonbeam version><optional custom suffix>
+      - 'v*'
+
+jobs:
+  prerelease:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: get the current version tag for moonbeam-binary and moonbeam
+        run: |
+          pushed_tag=${GITHUB_REF/refs\/tags\//}
+          moonbeam_tag=${pushed_tag%-*}
+          echo "MOONBEAM_BINARY_TAG=$pushed_tag" >> $GITHUB_ENV
+          echo "MOONBEAM_TAG=$moonbeam_tag" >> $GITHUB_ENV
+
+      - name: pre release draft
+        id: create_release
+        uses: actions/create-release@v1.1.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.MOONBEAM_BINARY_TAG }}
+          release_name: ${{ env.MOONBEAM_BINARY_TAG }}
+          draft: true
+          prerelease: true
+
+      - run: |
+          upload_url=${{ steps.create_release.outputs.upload_url }}
+          echo "RELEASE_UPLOAD_URL=$upload_url" >> $GITHUB_ENV
+
+  prebuild:
+    needs: prerelease
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix: # windows wormholes are not supported
+        os:
+          - ubuntu-20.04
+          - macos-11.0
+    steps:
+      - name: checkout the moonbeam repo
+        uses: actions/checkout@v2.3.4
+        with:
+          repository: PureStake/moonbeam
+          ref: ${{ env.MOONBEAM_TAG }}
+          path: ./moonbeam
+
+      - name: substrate prerequisites & moonbeam init
+        run: |
+          curl https://getsubstrate.io -sSf | bash -s -- --fast
+          cd ./moonbeam
+          ./scripts/init.sh
+          source $HOME/.cargo/env
+
+      - name: build the moonbeam binary
+        run: cargo build --release
+
+      - name: monkey test the prebuilt moonbeam binary
+        run: ./target/release/moonbeam --version
+
+      - name: zipup the binary
+        run:  zip ./moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.zip ./target/release/moonbeam
+     
+      - name: sha256sum the binary
+        run: |
+          sha256sum -b ./moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.zip >> /tmp/sha256sums
+          # TODO add the sha sums file to the release somehow
+
+      - name: upload the prebuilt binary
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ env.RELEASE_UPLOAD_URL }}
+          asset_path: ./moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.zip
+          asset_name: moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.zip
+          asset_content_type: application/zip
