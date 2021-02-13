@@ -63,10 +63,10 @@ jobs:
       - name: zipup the binary
         run:  zip ./moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.zip ./target/release/moonbeam
      
-      - name: sha256sum the binary
-        run: |
-          sha256sum -b ./moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.zip >> /tmp/sha256sums
-          # TODO add the sha sums file to the release somehow
+      # - name: sha256sum the binary
+      #   run: |
+      #     sha256sum -b ./moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.zip >> /tmp/sha256sums
+      #     # TODO add the sha sums file to the release somehow
 
       - name: upload the prebuilt binary
         uses: actions/upload-release-asset@v1.0.2
