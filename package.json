@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm test",
-    "postinstall": "./install.js"
+    "postinstall": "node ./install.js"
   },
   "keywords": [
     "moonbeam",
@@ -19,6 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "simple-get": "4.0.0",
+    "unzip-stream": "^0.3.1",
     "unzipper": "0.10.11"
   }
 }
