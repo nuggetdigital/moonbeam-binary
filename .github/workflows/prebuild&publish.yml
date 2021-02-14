@@ -9,12 +9,10 @@ jobs:
   prerelease:
     runs-on: ubuntu-20.04
     steps:
-      - name: get the current version tag for moonbeam-binary and moonbeam
+      - name: get the current version tag for moonbeam-binary
         run: |
           pushed_tag=${GITHUB_REF/refs\/tags\//}
-          moonbeam_tag=${pushed_tag%-*}
           echo "MOONBEAM_BINARY_TAG=$pushed_tag" >> $GITHUB_ENV
-          echo "MOONBEAM_TAG=$moonbeam_tag" >> $GITHUB_ENV
 
       - name: pre release draft
         id: create_release
@@ -40,6 +38,13 @@ jobs:
           - ubuntu-20.04
           - macos-11.0
     steps:
+      - name: get the current version tag for moonbeam-binary and moonbeam
+        run: |
+          pushed_tag=${GITHUB_REF/refs\/tags\//}
+          moonbeam_tag=${pushed_tag%-*}
+          echo "MOONBEAM_BINARY_TAG=$pushed_tag" >> $GITHUB_ENV
+          echo "MOONBEAM_TAG=$moonbeam_tag" >> $GITHUB_ENV
+
       - name: checkout the moonbeam repo
         uses: actions/checkout@v2.3.4
         with:
