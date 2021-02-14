@@ -26,9 +26,17 @@ jobs:
           draft: true
           prerelease: true
 
-      - run: |
-          upload_url=${{ steps.create_release.outputs.upload_url }}
-          echo "RELEASE_UPLOAD_URL=$upload_url" >> $GITHUB_ENV
+      - name: prep a release upload url artifact
+        run: |
+          release_upload_url=${{ steps.create_release.outputs.upload_url }}
+          echo "[DEBUG] release upload url $release_upload_url"
+          echo "$release_upload_url" > ./release_upload_url.txt
+
+      - name: upload the release upload url artifact
+        uses: actions/upload-artifact@v2.2.2
+        with:
+          name: release_upload_url
+          path: ./release_upload_url.txt
 
   prebuild:
     needs: prerelease
@@ -77,6 +85,14 @@ jobs:
       #   run: |
       #     sha256sum -b ./moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.zip >> /tmp/sha256sums
       #     # TODO add the sha sums file to the release somehow
+
+      - name: download the release upload url artifact
+        uses: actions/download-artifact@v2.0.8
+        with:
+          name: release_upload_url
+
+      - name: set the release upload url as an env var
+        run: echo "RELEASE_UPLOAD_URL=$(<./release_upload_url.txt)" >> $GITHUB_ENV
 
       - name: upload the prebuilt binary
         uses: actions/upload-release-asset@v1.0.2
