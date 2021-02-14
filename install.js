@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const get = require('simple-get')
 // var crypto = require('crypto')
 const os = require('os')
