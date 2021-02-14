@@ -80,7 +80,7 @@ jobs:
         run: ./moonbeam/target/release/moonbeam --version
 
       - name: zipup the binary
-        run:  zip ./moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.zip ./moonbeam/target/release/moonbeam
+        run:  zip -mj ./moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.zip ./moonbeam/target/release/moonbeam
      
       # - name: sha256sum the binary
       #   run: |
