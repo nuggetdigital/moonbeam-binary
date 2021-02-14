@@ -36,7 +36,7 @@ jobs:
       matrix: # windows wormholes are not supported
         os:
           - ubuntu-20.04
-          - macos-11.0
+          - macos-10.15
     steps:
       - name: get the current version tag for moonbeam-binary and moonbeam
         run: |
