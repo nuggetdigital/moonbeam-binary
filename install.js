@@ -4,9 +4,7 @@ const os = require('os')
 const fs = require('fs')
 const stream = require('stream')
 const path = require('path')
-// const unzipper = require('unzipper')
-// var yauzl = require("yauzl");
-var unzip = require("unzip-stream")
+const unzip = require('unzip-stream')
 const version = `v${process.env.MOONBEAM_TAG || require('./package.json').version}`
 
 // var darwinSha256 = ''
@@ -14,7 +12,7 @@ const version = `v${process.env.MOONBEAM_TAG || require('./package.json').versio
 
 let url
 // var sha256
-const binary = `moonbeam-${version}-macos-11.0`
+let binary = `moonbeam-${version}-`
 
 switch (os.platform()) {
 //   case 'win32':
@@ -22,17 +20,21 @@ switch (os.platform()) {
 //     sha256 = win32Sha256
 //     break
   case 'darwin':
-    url = `https://github.com/nugget-digital/moonbeam-binary/releases/download/v${version}/${binary}`
+    binary += 'macos-11.0'
+    url = `https://github.com/nugget-digital/moonbeam-binary/releases/download/${version}/${binary}.zip`
     // sha256 = darwinSha256
     break
   case 'linux':
-    url = `https://github.com/nugget-digital/moonbeam-binary/releases/download/v${version}/${binary}`
+    binary += 'ubuntu-20.04'
+    url = `https://github.com/nugget-digital/moonbeam-binary/releases/download/${version}/${binary}.zip`
     // sha256 = linuxSha256
     break
   default:
     console.error('No moonbeam binary found for:', os.platform())
     process.exit(1)
 }
+
+console.log('[DEBUG] url', url)
 
 get(url, function (err, res) {
   if (err) {
@@ -42,8 +44,8 @@ get(url, function (err, res) {
 
   const tmpDir = path.resolve(__dirname, `./${binary}.tmp`)
 
-  const unzipr =unzip.Extract({ path: tmpDir })// unzipper.Extract({ path: tmpDir })
-    // var hash = crypto.createHash('sha256')
+  const unzipr = unzip.Extract({ path: tmpDir })// unzipper.Extract({ path: tmpDir })
+  // var hash = crypto.createHash('sha256')
 
   stream.pipeline(res, unzipr, function (err) {
     if (err) {
@@ -56,9 +58,8 @@ get(url, function (err, res) {
     //   process.exit(1)
     // }
 
-    fs.renameSync(path.join(tmpDir,"moonbeam"), path.resolve(__dirname, "moonbeam"))
-    fs.chmodSync(path.resolve(__dirname, "moonbeam"), 0o777)
-    fs.rmdirSync(tmpDir)
+    fs.renameSync(path.join(tmpDir, 'moonbeam'), path.resolve(__dirname, 'moonbeam'))
+    fs.chmodSync(path.resolve(__dirname, 'moonbeam'), 0o777)
   })
 
 //   res.on('data', chunk => hash.update(chunk))
