@@ -69,10 +69,10 @@ jobs:
           curl https://getsubstrate.io -sSf | bash -s -- --fast
           cd ./moonbeam
           ./scripts/init.sh
-          source $HOME/.cargo/env
 
       - name: build the moonbeam binary
         run: |
+          source $HOME/.cargo/env
           cd ./moonbeam
           cargo build --release
 
