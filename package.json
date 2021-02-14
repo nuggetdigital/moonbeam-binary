@@ -4,7 +4,8 @@
   "description": "installs a moonbeam binary and prints its path",
   "main": "index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "npm test",
+    "postinstall": "./install.js"
   },
   "keywords": [
     "moonbeam",
