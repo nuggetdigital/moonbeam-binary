@@ -5,14 +5,14 @@ const fs = require('fs')
 const stream = require('stream')
 const path = require('path')
 const unzipper = require('unzipper')
-const version = require('./package.json').version
+const version = `v${process.env.MOONBEAM_TAG || require('./package.json').version}`
 
 // var darwinSha256 = ''
 // var linuxSha256 = ''
 
 let url
 // var sha256
-const binary = `moonbeam-v${version}-macos-11.0`
+const binary = `moonbeam-${version}-macos-11.0`
 
 switch (os.platform()) {
 //   case 'win32':
