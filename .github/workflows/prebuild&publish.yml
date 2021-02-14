@@ -64,13 +64,15 @@ jobs:
           source $HOME/.cargo/env
 
       - name: build the moonbeam binary
-        run: cargo build --release
+        run: |
+          cd ./moonbeam
+          cargo build --release
 
       - name: monkey test the prebuilt moonbeam binary
-        run: ./target/release/moonbeam --version
+        run: ./moonbeam/target/release/moonbeam --version
 
       - name: zipup the binary
-        run:  zip ./moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.zip ./target/release/moonbeam
+        run:  zip ./moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.zip ./moonbeam/target/release/moonbeam
      
       # - name: sha256sum the binary
       #   run: |
