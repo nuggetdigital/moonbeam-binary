@@ -12,6 +12,7 @@ jobs:
       - name: get the current version tag for moonbeam-binary
         run: |
           pushed_tag=${GITHUB_REF/refs\/tags\//}
+          echo "[DEBUG] MOONBEAM_BINARY_TAG=$pushed_tag"
           echo "MOONBEAM_BINARY_TAG=$pushed_tag" >> $GITHUB_ENV
 
       - name: pre release draft
@@ -40,8 +41,11 @@ jobs:
     steps:
       - name: get the current version tag for moonbeam-binary and moonbeam
         run: |
-          pushed_tag=${GITHUB_REF/refs\/tags\//}
-          moonbeam_tag=${pushed_tag%-*}
+          pushed_tag=${GITHUB_REF/refs\/tags\//} # rm the 'refs/tags/' prefix
+          unprefixed_tag=${pushed_tag#v} # rm the leading 'v'
+          moonbeam_tag=${unprefixed_tag%-*} # rm the dash suffix
+          echo "[DEBUG] MOONBEAM_BINARY_TAG=$pushed_tag"
+          echo "[DEBUG] MOONBEAM_TAG=$moonbeam_tag"
           echo "MOONBEAM_BINARY_TAG=$pushed_tag" >> $GITHUB_ENV
           echo "MOONBEAM_TAG=$moonbeam_tag" >> $GITHUB_ENV
 
