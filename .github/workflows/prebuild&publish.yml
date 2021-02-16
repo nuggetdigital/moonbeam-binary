@@ -42,10 +42,12 @@ jobs:
     needs: prerelease
     runs-on: ${{ matrix.os }}
     strategy:
-      matrix: # windows wormholes are not supported
+      matrix:
         os:
           - ubuntu-20.04
-          - macos-10.15
+          # - macos-10.15 # lately fails with "Error: cmake 3.19.4 is already installed"
+          # windows wormholes are not supported yet
+
     steps:
       - name: get the current version tag for moonbeam-binary and moonbeam
         run: |
