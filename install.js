@@ -4,8 +4,7 @@ const os = require('os')
 const fs = require('fs')
 const stream = require('stream')
 const path = require('path')
-// const unzip = require('unzip-stream')
-const unzipper = require('unzipper')
+const gunzip = require('gunzip-maybe')
 const version = `v${process.env.MOONBEAM_TAG || require('./package.json').version}`
 
 // var darwinSha256 = ''
@@ -22,12 +21,12 @@ switch (os.platform()) {
 //     break
   case 'darwin':
     binary += 'macos-11.0'
-    url = `https://github.com/nugget-digital/moonbeam-binary/releases/download/${version}/${binary}.zip`
+    url = `https://github.com/nugget-digital/moonbeam-binary/releases/download/${version}/${binary}.gz`
     // sha256 = darwinSha256
     break
   case 'linux':
     binary += 'ubuntu-20.04'
-    url = `https://github.com/nugget-digital/moonbeam-binary/releases/download/${version}/${binary}.zip`
+    url = `https://github.com/nugget-digital/moonbeam-binary/releases/download/${version}/${binary}.gz`
     // sha256 = linuxSha256
     break
   default:
@@ -43,25 +42,14 @@ get(url, function (err, res) {
     process.exit(1)
   }
 
-  const tmpDir = path.resolve(__dirname, `./${binary}.tmp`)
+  const moonbeam = path.resolve(__dirname, 'moonbeam')
 
-  const unzipr = unzipper.Extract({ path: tmpDir })// unzipper.Extract({ path: tmpDir })
-  // var hash = crypto.createHash('sha256')
-
-  stream.pipeline(res, unzipr, function (err) {
+  stream.pipeline(res, gunzip(), fs.createWriteStream(moonbeam), function (err) {
     if (err) {
       console.error(`Download failed - ${err.message}`)
       process.exit(1)
     }
 
-    // if (hash.digest('hex') !== sha256) {
-    //   console.error('SHA-256 checksum mismatch')
-    //   process.exit(1)
-    // }
-
-    fs.renameSync(path.join(tmpDir, 'moonbeam'), path.resolve(__dirname, 'moonbeam'))
-    fs.chmodSync(path.resolve(__dirname, 'moonbeam'), 0o777)
+    fs.chmodSync(moonbeam, 0o777)
   })
-
-//   res.on('data', chunk => hash.update(chunk))
 })
