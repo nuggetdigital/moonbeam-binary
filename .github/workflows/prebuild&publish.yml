@@ -79,9 +79,9 @@ jobs:
       - name: monkey test the prebuilt moonbeam binary
         run: ./moonbeam/target/release/moonbeam --version
 
-      - name: zipup the binary
-        run:  zip -mj ./moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.zip ./moonbeam/target/release/moonbeam
-     
+      - name: gzipup the binary
+        run: gzip -c ./moonbeam/target/release/moonbeam > ./moonbeam.gz
+
       # - name: sha256sum the binary
       #   run: |
       #     sha256sum -b ./moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.zip >> /tmp/sha256sums
@@ -101,6 +101,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ env.RELEASE_UPLOAD_URL }}
-          asset_path: ./moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.zip
-          asset_name: moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.zip
-          asset_content_type: application/zip
+          asset_path: ./moonbeam.gz
+          asset_name: moonbeam-${{ env.MOONBEAM_BINARY_TAG }}-${{ matrix.os }}.gz
+          asset_content_type: application/gzip
