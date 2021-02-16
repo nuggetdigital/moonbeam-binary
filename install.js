@@ -15,15 +15,16 @@ let url
 let binary = `moonbeam-${version}-`
 
 switch (os.platform()) {
-//   case 'win32':
-//     url = ''
-//     sha256 = win32Sha256
-//     break
-  case 'darwin':
-    binary += 'macos-11.0'
-    url = `https://github.com/nugget-digital/moonbeam-binary/releases/download/${version}/${binary}.gz`
-    // sha256 = darwinSha256
-    break
+  // case 'win32':
+  //   url = ''
+  //   sha256 = win32Sha256
+  //   break
+  // lately fails with "Error: cmake 3.19.4 is already installed"
+  // case 'darwin':
+  //   binary += 'macos-11.0'
+  //   url = `https://github.com/nugget-digital/moonbeam-binary/releases/download/${version}/${binary}.gz`
+  //   // sha256 = darwinSha256
+  //   break
   case 'linux':
     binary += 'ubuntu-20.04'
     url = `https://github.com/nugget-digital/moonbeam-binary/releases/download/${version}/${binary}.gz`
