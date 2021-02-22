@@ -1,1 +1,1 @@
-module.exports = require('path').resolve(__dirname, './moonbeam')
+module.exports = require("path").resolve(__dirname, "moonbeam")

@@ -4,7 +4,7 @@
   "description": "installs a moonbeam binary and prints its path",
   "main": "index.js",
   "scripts": {
-    "fmt": "npx standard --fix",
+    "fmt": "npx prettier --no-semi --arrow-parens avoid --trailing-comma none --print-width 80 --write ./index.js ./install.js",
     "test": "npm test",
     "postinstall": "node ./install.js"
   },
@@ -19,9 +19,7 @@
   "author": "Noah Anabiik Schwarz",
   "license": "MIT",
   "dependencies": {
-    "gunzip-maybe": "^1.4.2",
-    "simple-get": "4.0.0",
-    "unzipper": "^0.10.11",
-    "yauzl": "^2.10.0"
+    "gunzip-maybe": "1.4.2",
+    "simple-get": "4.0.0"
   }
 }
