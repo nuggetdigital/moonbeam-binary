@@ -7,11 +7,9 @@ var stream = require("stream")
 var get = require("simple-get")
 var gunzip = require("gunzip-maybe")
 
-var pkg = require("./package.json")
-
 var version = process.env.MOONBEAM_BINARY_TAG
   ? process.env.MOONBEAM_BINARY_TAG
-  : `v${pkg.version}`
+  : `v${require("./package.json").version}`
 
 function panic(err) {
   err && console.error(err.message || err)
@@ -32,16 +30,13 @@ switch (os.platform()) {
 
 get.concat(sha, function (err, r, buf) {
   if (err) panic(err)
-  if (r.statusCode !== 200)
-    panic(`unexpected status code ${r.statusCode} getting ${sha}`)
+  if (r.statusCode !== 200) panic(`http status ${r.statusCode} getting ${sha}`)
   var expected = buf.toString("utf8").trim()
+  var hash = crypto.createHash("sha256")
+  var moonbeam = path.resolve(__dirname, "moonbeam")
   get(url, function (err, res) {
     if (err) panic(err)
-    var hash = crypto.createHash("sha256")
-    var moonbeam = path.resolve(__dirname, "moonbeam")
-    res.on("data", function (chunk) {
-      hash.update(chunk)
-    })
+    res.on("data", hash.update.bind(hash))
     stream.pipeline(
       res,
       gunzip(),
