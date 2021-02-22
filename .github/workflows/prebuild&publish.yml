@@ -55,15 +55,15 @@ jobs:
           unprefixed_tag=${pushed_tag#v} # rm the leading 'v'
           moonbeam_tag=${unprefixed_tag%-*} # rm the dash suffix
           echo "[DEBUG] MOONBEAM_BINARY_TAG=$pushed_tag"
-          echo "[DEBUG] MOONBEAM_TAG=$moonbeam_tag"
+          #echo "[DEBUG] MOONBEAM_TAG=$moonbeam_tag"
           echo "MOONBEAM_BINARY_TAG=$pushed_tag" >> $GITHUB_ENV
-          echo "MOONBEAM_TAG=$moonbeam_tag" >> $GITHUB_ENV
+          #echo "MOONBEAM_TAG=$moonbeam_tag" >> $GITHUB_ENV
 
       - name: checkout the moonbeam repo
         uses: actions/checkout@v2.3.4
         with:
           repository: PureStake/moonbeam
-          ref: ${{ env.MOONBEAM_TAG }}
+          ref: ${{ env.MOONBEAM_BINARY_TAG }}
           path: ./moonbeam
 
       - name: substrate prerequisites & moonbeam init
