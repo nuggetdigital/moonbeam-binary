@@ -1,7 +1,7 @@
 {
   "name": "moonbeam-binary",
-  "version": "0.6.0",
-  "description": "installs a moonbeam binary and prints its path",
+  "version": "0.6.1",
+  "description": "installs a prebuilt moonbeam binary and prints its path",
   "main": "index.js",
   "scripts": {
     "fmt": "npx prettier --no-semi --arrow-parens avoid --trailing-comma none --print-width 80 --write ./index.js ./install.js",

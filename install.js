@@ -12,7 +12,7 @@ var version = process.env.MOONBEAM_BINARY_TAG
   : `v${require("./package.json").version}`
 
 function panic(err) {
-  err && console.error(err.message || err)
+  if (err) console.error(err.message || err)
   process.exit(1)
 }
 
@@ -21,8 +21,8 @@ var sha
 
 switch (os.platform()) {
   case "linux":
-    url = `https://github.com/nugget-digital/moonbeam-binary/releases/download/${version}/moonbeam-${version}-ubuntu-20.04.gz`
-    sha = `https://github.com/nugget-digital/moonbeam-binary/releases/download/${version}/moonbeam-${version}-ubuntu-20.04.gz.sha256sum`
+    url = `https://github.com/nuggetdigital/moonbeam-binary/releases/download/${version}/moonbeam-${version}-ubuntu-20.04.gz`
+    sha = `https://github.com/nuggetdigital/moonbeam-binary/releases/download/${version}/moonbeam-${version}-ubuntu-20.04.gz.sha256sum`
     break
   default:
     panic(`no moonbeam binary found for ${os.platform()}`)
