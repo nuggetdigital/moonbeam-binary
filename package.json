@@ -1,6 +1,6 @@
 {
   "name": "moonbeam-binary",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "installs a prebuilt moonbeam binary and prints its path",
   "main": "index.js",
   "scripts": {
