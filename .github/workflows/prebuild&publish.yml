@@ -68,8 +68,6 @@ jobs:
       - name: substrate prerequisites & moonbeam init
         run: |
           curl https://getsubstrate.io -sSf | bash -s -- --fast
-          cd ./moonbeam
-          ./scripts/init.sh
 
       - name: build the moonbeam binary
         run: |
